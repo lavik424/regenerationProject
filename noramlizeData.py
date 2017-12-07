@@ -31,16 +31,16 @@ readsList = [1605853,1943338,4432151,3828145,4567791,
 def NormalizeDataByThershold(filePath):
     minimumNumOfReads = min(readsList)
     for i in range(1, 11):
-        print("starting {} iteration\n".format(i))
+        print("starting {} iteration".format(i))
         thershold = i / minimumNumOfReads
         destinationPath = '/home/lavik/Desktop/lavi/regenerationProject/CPMThershold{}.csv'.format(i)
         with open(destinationPath, 'w', newline='') as f_des:
             des = csv.writer(f_des, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            data = genfromtxt(filePath, delimiter=',', dtype=float)
+            data = genfromtxt(filePath, delimiter=',', dtype='U')
             for row in range(len(data)):
-                valList = []
-                for j in range(len(data[row])):
-                    value = int(data[row][j]) / readsList[j]
+                valList = [data[row][0]]
+                for j in range(1,len(data[row])):
+                    value = int(data[row][j]) / readsList[j-1]
                     valList.append((value * 10 ** 6) if value > thershold else 0)
                 des.writerow(valList)
 
@@ -48,10 +48,11 @@ def NormalizeDataByThershold(filePath):
 
 # removes the lines where all normalized value are 0
 def removeZeroLines(reader,filePath):
+    print("removing zero lines")
     with open(filePath, 'w', newline='') as f_des:
         des = csv.writer(f_des, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         for row in reader:
-            for value in row:
+            for value in row[1:]:
                 if float(value) > 0:
                     des.writerow(row)
                     break
