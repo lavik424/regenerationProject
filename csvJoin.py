@@ -66,6 +66,7 @@ reader = csv.reader(f1)
 remove_zero_lines(reader)
 f1.close()
 
-
-
+#
+# if __name__ == '__main__':
+#     main()
 
